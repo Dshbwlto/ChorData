@@ -52,11 +52,13 @@ public class AbstractTailHandler {
     /// Returns degrees, use in the render method for posestack/item rendering/Create partial models
     public float newBodyYRot() {
         float x = -entity.getPreciseBodyRotation(ChorDataMathUtil.getPartialTicks());
-        int i = turning_y ? (yDir0 > 1 ? 1 : -1) : 0;
-        if (this.yMomentum <= 0.02 && this.yMomentum >= -0.02) {
-            this.yMomentum += i * 0.001f;
+        if (entity.level().isClientSide && !ChorDataMathUtil.isGamePaused()) {
+            int i = turning_y ? (yDir0 > 1 ? 1 : -1) : 0;
+            if (this.yMomentum <= 0.02 && this.yMomentum >= -0.02) {
+                this.yMomentum += i * 0.001f;
+            }
+            yRot = Mth.rotLerp(yMomentum * i, yRot, entity.getPreciseBodyRotation(ChorDataMathUtil.getPartialTicks()));
         }
-        yRot = Mth.rotLerp(yMomentum * i, yRot, entity.getPreciseBodyRotation(ChorDataMathUtil.getPartialTicks()));
         return x + yRot;
     }
 
@@ -66,11 +68,13 @@ public class AbstractTailHandler {
     }
     /// Returns degrees
     public float newBodyXRot() {
-        int i = turning_x ? (xDir0 > 1 ? 1 : -1) : 0;
-        if (this.xMomentum <= 0.01 && this.xMomentum >= -0.01) {
-            this.xMomentum += i * 0.001f;
+        if (entity.level().isClientSide && !ChorDataMathUtil.isGamePaused()) {
+            int i = turning_x ? (xDir0 > 1 ? 1 : -1) : 0;
+            if (this.xMomentum <= 0.01 && this.xMomentum >= -0.01) {
+                this.xMomentum += i * 0.001f;
+            }
+            xRot = Mth.rotLerp(0.01f, xRot, entity.getXRot());
         }
-        xRot = Mth.rotLerp(0.01f, xRot, entity.getXRot());
         return xRot;
     }
 
@@ -81,7 +85,9 @@ public class AbstractTailHandler {
     }
     /// Returns degrees
     public float getTailYRot(int index) {
-        tailYRots[index] = Mth.rotLerp(((float)index) * 0.06f, tailYRots[index], index == 1 ? yRot : tailYRots[index - 1]);
+        if (entity.level().isClientSide() && !ChorDataMathUtil.isGamePaused()) {
+            tailYRots[index] = Mth.rotLerp(((float) index) * 0.06f, tailYRots[index], index == 1 ? yRot : tailYRots[index - 1]);
+        }
         return (-yRot + tailYRots[index]);
     }
 
@@ -91,7 +97,9 @@ public class AbstractTailHandler {
     }
     /// Returns degrees
     public float getTailXRot(int index) {
-        tailXRots[index] = Mth.rotLerp(((float)index) * 0.05f, tailXRots[index], index == 1 ? xRot : tailXRots[index - 1]);
+        if (entity.level().isClientSide() && !ChorDataMathUtil.isGamePaused()) {
+            tailXRots[index] = Mth.rotLerp(((float) index) * 0.05f, tailXRots[index], index == 1 ? xRot : tailXRots[index - 1]);
+        }
         return (-xRot + tailXRots[index]);
     }
 }

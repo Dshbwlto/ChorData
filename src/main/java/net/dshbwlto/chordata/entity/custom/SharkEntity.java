@@ -38,7 +38,7 @@ public class SharkEntity extends Animal {
     public TentacleTailHandler tailHandler;
     public SharkEntity(EntityType entityType, Level level) {
         super(entityType, level);
-        this.moveControl = new SmoothSwimmingMoveControl(this, getTarget() == null ? 85 : 150, 2, 0.02F, 0.1F, false);
+        this.moveControl = new SmoothSwimmingMoveControl(this, getTarget() == null ? 85 : 150, getTarget() == null ? 1 : 6, 0.02F, 0.1F, false);
         this.lookControl = new SmoothSwimmingLookControl(this, getTarget() == null ? 2 : 5);
         this.tailHandler = new TentacleTailHandler(this, 6, 1, 10, 5.6f, 4.3f);
         this.setPathfindingMalus(PathType.WATER, 0.0F);
@@ -52,7 +52,7 @@ public class SharkEntity extends Animal {
     @Override
     public void registerGoals() {
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2F, true));
-        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, (double)1, 100){
+        this.goalSelector.addGoal(2, new RandomSwimmingGoal(this, 1, 1000){
             @Override
             public boolean canUse() {
                 if (this.mob.hasControllingPassenger()) {

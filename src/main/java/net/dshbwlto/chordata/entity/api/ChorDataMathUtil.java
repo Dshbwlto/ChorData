@@ -28,4 +28,9 @@ public class ChorDataMathUtil {
     public static float getTicksAndPartialTicks() {
         return getTicks() + getPartialTicks();
     }
+
+    public static boolean isGamePaused() {
+        Minecraft mc = Minecraft.getInstance();
+        return mc.isPaused();
+    }
 }
